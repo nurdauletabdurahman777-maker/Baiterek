@@ -300,6 +300,22 @@ function Card({
     </article>
   );
 }
+function ServiceGlyph({ slug }: { slug: string }) {
+  if (slug === "wagon-leasing")
+    return (
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M10 19h44v25H10zM15 24h34M18 29v10M25 29v10M32 29v10M39 29v10M46 29v10M17 49h30M21 44v5M43 44v5" />
+        <circle cx="21" cy="51" r="3" />
+        <circle cx="43" cy="51" r="3" />
+      </svg>
+    );
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <path d="M18 26c-8-3-10-9-8-14 7 0 12 3 15 8M46 26c8-3 10-9 8-14-7 0-12 3-15 8M18 25c2-8 9-12 14-12s12 4 14 12v16c0 9-7 15-14 15S18 50 18 41V25Z" />
+      <path d="M25 33h.1M39 33h.1M27 45c3 2 7 2 10 0M29 39h6" />
+    </svg>
+  );
+}
 function Catalog() {
   const [items, setItems] = useState<Obj[]>(demoServices),
     [search, setSearch] = useState(""),
@@ -325,49 +341,92 @@ function Catalog() {
       );
   }, [search, category]);
   return (
-    <section className="wrap section">
-      <Heading
-        tag="Каталог мер поддержки"
-        title="Найдите услугу для вашей задачи"
-      />
-      <p className="lead">
-        Поиск по единому каталогу организаций группы «Байтерек».
-      </p>
-      <div className="filters">
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Название услуги, цель или организация"
-        />
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
-          <option value="">Все категории</option>
-          <option>Лизинг</option>
-          <option>Агробизнес</option>
-        </select>
-        <select>
-          <option>Все регионы</option>
-          <option>Астана</option>
-        </select>
-        <button className="btn">Найти</button>
-      </div>
+    <section className="catalogPage">
+      <div className="wrap catalogShell">
+        <div className="breadcrumbs">
+          <Link href="/">Главная</Link><i>›</i><span>Услуги</span>
+        </div>
+        <div className="catalogIntro">
+          <h1>Найдите услугу для вашей задачи</h1>
+          <p>
+            Сервисы и программы группы компаний АО «НУХ «Байтерек»» для
+            предпринимателей и организаций. Подберите поддержку, подходящую
+            именно вам.
+          </p>
+        </div>
+        <div className="catalogFilters">
+          <div className="catalogSearch">
+            <span aria-hidden="true">⌕</span>
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Поиск по названию услуги, направлению или описанию"
+            />
+            <button className="btn">Найти</button>
+          </div>
+          <div className="catalogFilterGrid">
+            <label>
+              <span>Направление</span>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option value="">Все направления</option>
+                <option>Лизинг</option>
+                <option>Агробизнес</option>
+              </select>
+            </label>
+            <label>
+              <span>Регион</span>
+              <select>
+                <option>Все регионы</option>
+                <option>Астана</option>
+              </select>
+            </label>
+            <div className="catalogFilterNote">
+              Условия и доступность определяются опубликованной конфигурацией
+              услуги.
+            </div>
+          </div>
+        </div>
       {error && <div className="alert warn">{error}</div>}
-      <p>
-        Найдено: <b>{items.length}</b>
-      </p>
-      <div className="grid2">
+        <div className="catalogResultBar">
+          <span>Найдено услуг: <b>{items.length}</b></span>
+          <small>Актуальные опубликованные версии</small>
+        </div>
+      <div className="serviceList">
         {items.map((x) => (
-          <Card
-            key={x.id}
-            slug={x.slug}
-            title={x.title}
-            org={x.organization}
-            type={x.category}
-          />
+          <article className="serviceRow" key={x.id}>
+            <div className="serviceGlyph"><ServiceGlyph slug={x.slug} /></div>
+            <div className="serviceSummary">
+              <h2>{x.title}</h2>
+              <p>{x.short_description}</p>
+              <div className="serviceTags">
+                <span>{x.category}</span>
+                <span>{x.support_type}</span>
+                <span>{x.audience?.slice(0, 2).join(" / ")}</span>
+              </div>
+            </div>
+            <div className="serviceFacts">
+              <span><small>Организация</small><b>{x.organization}</b></span>
+              <span><small>Подача</small><b>{x.processing_time}</b></span>
+              <span className="available">● Услуга доступна · v{x.version}</span>
+            </div>
+            <div className="serviceActions">
+              <Link className="btn" href={`/services/${x.slug}`}>
+                Подробнее →
+              </Link>
+              <Link className="btn outline" href={`/apply/${x.slug}`}>
+                Проверить доступность
+              </Link>
+            </div>
+          </article>
         ))}
       </div>
       {!items.length && (
         <div className="state">По заданным параметрам услуги не найдены.</div>
       )}
+      </div>
     </section>
   );
 }
@@ -818,6 +877,8 @@ function Application({ slug }: { slug: string }) {
           </div>
         ))}
         {error && <div className="alert bad">{error}</div>}
+        <div className="applicationContent">
+          <div className="applicationMain">
         <div className="formCard">
           {current.map((f: Obj) => (
             <label className="field" id={f.id} key={f.id}>
@@ -926,6 +987,53 @@ function Application({ slug }: { slug: string }) {
               </button>
             </>
           )}
+        </div>
+          </div>
+          <aside className="applicationInspector">
+            <div className="box inspectorDocuments">
+              <h3>Требуемые документы</h3>
+              {s.documents.map((document: Obj) => {
+                const required = runtime.required_documents.includes(
+                  document.id,
+                );
+                const uploaded = docs.includes(document.id);
+                return (
+                  <div
+                    className={uploaded ? "uploaded" : required ? "missing" : "optional"}
+                    key={document.id}
+                  >
+                    <span>
+                      <b>{document.title}</b>
+                      <small>{required ? "Обязательный" : "По сценарию"}</small>
+                    </span>
+                    <strong>{uploaded ? "✓" : required ? "!" : "○"}</strong>
+                  </div>
+                );
+              })}
+              <button
+                className="ghost"
+                onClick={() => {
+                  const documentStep = s.steps.findIndex((item: Obj) =>
+                    item.title.includes("Документ"),
+                  );
+                  if (documentStep >= 0) setStep(documentStep);
+                }}
+              >
+                Перейти к документам →
+              </button>
+            </div>
+            <div className="box inspectorReadiness">
+              <h3>Готовность к следующему шагу</h3>
+              <div className="good">✓ Данные предзаполнены</div>
+              <div className={runtime.required_fields.some((id: string) => !answers[id]) ? "warn" : "good"}>
+                {runtime.required_fields.some((id: string) => !answers[id]) ? "! Заполните обязательные поля" : "✓ Обязательные поля заполнены"}
+              </div>
+              <div className={runtime.required_documents.some((id: string) => !docs.includes(id)) ? "warn" : "good"}>
+                {runtime.required_documents.some((id: string) => !docs.includes(id)) ? "! Проверьте обязательные документы" : "✓ Документы готовы"}
+              </div>
+              <small>{saved}</small>
+            </div>
+          </aside>
         </div>
       </section>
     </div>
@@ -1322,6 +1430,23 @@ function Studio() {
                 <Link className="btn outline" href={`/apply/${selected.slug}`}>
                   Предпросмотр →
                 </Link>
+                <div className="box compilerShortcut">
+                  <em>AI SERVICE COMPILER</em>
+                  <h3>Сформировать конфигурацию</h3>
+                  <p>
+                    Преобразуйте текст программы в проверяемый черновик полей,
+                    документов и правил.
+                  </p>
+                  <button
+                    className="btn"
+                    onClick={() => {
+                      setSelected(undefined);
+                      setTab("AI Service Compiler");
+                    }}
+                  >
+                    Открыть Compiler
+                  </button>
+                </div>
               </aside>
             </div>
           </>

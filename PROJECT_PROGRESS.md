@@ -14,6 +14,7 @@
 | 8. Финальная QA и деплой | Завершена | Tests/typecheck/build/migration/startup PASS; QA report готов |
 | 9. Production reliability audit | Завершена | Мгновенный UTF-8 seed fallback, API timeout, 3 роли, полный offline browser smoke PASS |
 | 10. Premium visual system и responsive QA | Завершена | Inter Variable, institutional UI tokens, 50 viewport/page checks, interaction smoke и production build PASS |
+| 11. Reference-fidelity correction | Завершена | Row-based catalogue, Baiterek header/footer, 2-column form inspector, dense Studio; 15 responsive checks PASS |
 
 ## Решения
 
@@ -51,3 +52,12 @@
 - Responsive production audit: 10 критических маршрутов × 5 viewport (`360`, `390`, `768`, `1024`, `1440`) — 0 horizontal overflow, 0 blank pages, 0 framework overlays.
 - Interaction smoke: navigation, 500M rule, entrepreneur/analyst/admin login, Quality Gate, AI Compiler, reports preview, map и tools — PASS, console errors: 0 на configured origin.
 - Финальные `typecheck`, `lint` и `next build` — PASS.
+
+## Phase 11 — точное выравнивание с утверждённым референсом
+
+- Каталог перестроен из двух больших карточек в компактные service rows с иконкой, существующими метаданными, статусом и действиями.
+- Header и светлый многоколоночный footer приведены к Baiterek/FlowOS визуальной системе референса; все ссылки ведут на существующие маршруты.
+- Форма заявки получила desktop-сетку в две колонки и постоянный inspector документов/readiness на основе текущего runtime, без изменения правил.
+- Service Studio уплотнён до трёхпанельного рабочего места; Quality Gate и существующий AI Service Compiler доступны в правой панели.
+- Повторный audit: каталог, форма и Studio на `360`, `390`, `768`, `1024`, `1536` — 15/15 PASS, overflow/overlay/console errors: 0.
+- Критическое правило `500 000 001 ₸` повторно проверено: ТЭО появляется, documents count = 2.
