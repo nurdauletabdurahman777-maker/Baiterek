@@ -1,0 +1,6 @@
+import type {Metadata} from "next";
+import Link from "next/link";
+import "./globals.css";
+export const metadata:Metadata={title:"Baiterek FlowOS — Единый портал поддержки бизнеса",description:"Конфигурационная платформа цифровых мер поддержки"};
+export default function Layout({children}:{children:React.ReactNode}){return <html lang="ru"><body><div className="demo">Демонстрационный MVP · eGov/BIN, ЭЦП, BPM, CRM и шина — моки</div><header><Link href="/" className="brand"><i>B</i><span>Baiterek <b>FlowOS</b><small>Единый портал поддержки бизнеса</small></span></Link><nav><Link href="/services">Услуги</Link><Link href="/map">Карта</Link><Link href="/reports">Аналитика</Link><Link href="/tools">Инструменты</Link></nav><div className="logins"><Link href="/login/entrepreneur">Предприниматель</Link><Link href="/login/analyst">Аналитик</Link><Link href="/login/holding_admin">Администратор</Link><button>RU / KZ</button></div></header><main>{children}</main><footer><div><b>Baiterek FlowOS</b><p>Цифровая операционная система мер поддержки.</p></div><div><Link href="/services">Каталог</Link><Link href="/account">Личный кабинет</Link><Link href="/studio">Service Studio</Link></div><div><b>Контакт-центр</b><p>+7 7172 91 91 91</p></div><small>© 2026 · Демо-условия не являются официальными критериями одобрения.</small></footer></body></html>}
+
