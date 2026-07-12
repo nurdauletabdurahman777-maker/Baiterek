@@ -9,4 +9,5 @@ frontend/.next/
 frontend/out/
 *.tsbuildinfo
 coverage/
+.deploy-tools/
 .DS_Store
