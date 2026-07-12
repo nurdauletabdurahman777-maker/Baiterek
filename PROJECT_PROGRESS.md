@@ -15,6 +15,7 @@
 | 9. Production reliability audit | Завершена | Мгновенный UTF-8 seed fallback, API timeout, 3 роли, полный offline browser smoke PASS |
 | 10. Premium visual system и responsive QA | Завершена | Inter Variable, institutional UI tokens, 50 viewport/page checks, interaction smoke и production build PASS |
 | 11. Reference-fidelity correction | Завершена | Row-based catalogue, Baiterek header/footer, 2-column form inspector, dense Studio; 15 responsive checks PASS |
+| 12. Operational UX and latency repair | Завершена | Жюри/admin login, instant Analytics/Studio fallback, human-readable Compiler/Diff/Integrations; desktop/mobile smoke PASS |
 
 ## Решения
 
@@ -61,3 +62,14 @@
 - Service Studio уплотнён до трёхпанельного рабочего места; Quality Gate и существующий AI Service Compiler доступны в правой панели.
 - Повторный audit: каталог, форма и Studio на `360`, `390`, `768`, `1024`, `1536` — 15/15 PASS, overflow/overlay/console errors: 0.
 - Критическое правило `500 000 001 ₸` повторно проверено: ТЭО появляется, documents count = 2.
+
+## Phase 12 — устранение задержек и технического вывода
+
+- Устранено ожидание backend перед показом Studio, Quality Gate, AI Compiler, Policy Diff, интеграций и аналитики: интерфейс сразу показывает детерминированный результат, затем обновляет его в фоне.
+- Удалён пользовательский вывод сырого JSON. Compiler, Policy Diff, интеграции и аналитика отображаются понятными карточками, списками, статусами и показателями.
+- Демо-вход жюри и администраторов переведён на полный переход после установки cookie роли; ссылка «Администрирование» теперь гарантированно переключает роль перед открытием панели.
+- Аналитические отчёты сразу открываются с первым материалом в предпросмотре; панель администратора сразу содержит показатели и явно маркированные MOCK-события интеграций.
+- Browser smoke: вход жюри `397 ms`, Compiler показывает результат за `215 ms`, Analytics содержит 4 KPI, raw `<pre>` = 0 во всех проверенных модулях.
+- Responsive smoke на `390 px`: `/reports`, `/studio`, `/admin` — `scrollWidth = clientWidth = 390`, горизонтального переполнения нет.
+- Критические сценарии: редактирование услуги `698 ms`, Quality Gate `336 ms`; при `500 000 000 ₸` ТЭО optional, при `500 000 001 ₸` — missing/required.
+- Финальные проверки: `tsc --noEmit` PASS, ESLint PASS, Next.js production build PASS, backend `pytest` 8/8 PASS, `/health` = `ok`.

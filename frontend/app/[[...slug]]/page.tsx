@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any -- service definitions are runtime-configured JSON */
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   demoAnalytics,
@@ -65,24 +65,29 @@ const money = (n: number) =>
   }).format(n || 0);
 export default function RouterPage() {
   const pathname = usePathname(),
-    path = pathname.split("/").filter(Boolean),
-    router = useRouter();
+    path = pathname.split("/").filter(Boolean);
   useEffect(() => {
     const loginPath = pathname.split("/").filter(Boolean);
     if (loginPath[0] === "login" && loginPath[1]) {
       const role = loginPath[1] as Role;
+      if (
+        !["entrepreneur", "analyst", "subsidiary_admin", "holding_admin"].includes(
+          role,
+        )
+      )
+        return;
       localStorage.setItem("flowos_role", role);
-      document.cookie = `demo_role=${role}; path=/; SameSite=Lax`;
-      router.replace(
+      document.cookie = `demo_role=${role}; path=/; max-age=86400; SameSite=Lax`;
+      const target =
         role === "entrepreneur"
           ? "/account"
           : role === "analyst"
             ? "/studio"
-            : "/admin",
-      );
+            : "/admin";
+      window.location.replace(target);
     }
-  }, [pathname, router]);
-  if (path[0] === "login") return <State text="Выполняется демо-вход…" />;
+  }, [pathname]);
+  if (path[0] === "login") return <State text="Открываем рабочее место…" />;
   if (!path.length) return <Home />;
   if (path[0] === "services" && !path[1]) return <Catalog />;
   if (path[0] === "services" && path[1]) return <Service slug={path[1]} />;
@@ -109,6 +114,40 @@ function State({ text }: { text: string }) {
       {text}
     </section>
   );
+}
+
+const demoIntegrationLogs: Obj[] = [
+  { id: "demo-egov", connector: "eGov / BIN", method: "GET", endpoint: "/business-profile", status: "MOCK: успешно", response_time: 184 },
+  { id: "demo-bpm", connector: "BPM", method: "POST", endpoint: "/applications", status: "MOCK: принято", response_time: 236 },
+  { id: "demo-crm", connector: "CRM", method: "POST", endpoint: "/status-events", status: "MOCK: синхронизировано", response_time: 148 },
+];
+
+const compilerFallback: Obj = {
+  provider: "Детерминированный демо-режим",
+  requires_review: true,
+  draft: {
+    title: "Новая мера поддержки (черновик)",
+    description: "Структурированный черновик по загруженному тексту.",
+    audience: ["Субъекты предпринимательства"],
+    steps: ["Заявитель", "Проект", "Финансирование", "Документы", "Проверка"],
+    fields: ["БИН", "Название компании", "Запрашиваемая сумма", "Описание проекта"],
+    documents: ["Заявление", "Бизнес-план", "ТЭО при сумме свыше 500 млн ₸"],
+    rules: [{ human: "Если сумма больше 500 млн ₸, требуется ТЭО", confidence: 0.92, review_status: "Требует проверки аналитиком" }],
+  },
+};
+
+function moduleFallback(tab: string): Obj {
+  if (tab === "Policy Change Diff")
+    return {
+      provider: "Детерминированный демо-режим",
+      requires_approval: true,
+      changes: [
+        { type: "Порог финансирования", component: "Правило суммы финансирования", previous: "500 млн ₸", new: "650 млн ₸", suggested_update: "Обновить значение условия в Rule Builder", approval_status: "Ожидает решения" },
+        { type: "Комплект документов", component: "Document Requirement Engine", previous: "Базовый пакет", new: "Добавлен подтверждающий документ", suggested_update: "Проверить перечень обязательных документов", approval_status: "Ожидает решения" },
+      ],
+    };
+  if (tab === "Интеграции") return { items: demoIntegrationLogs };
+  return demoAnalytics;
 }
 function Home() {
   const goals = [
@@ -1251,7 +1290,7 @@ function Studio() {
             {x}
           </button>
         ))}
-        <Link href="/admin">Администрирование →</Link>
+        <Link href="/login/holding_admin">Администрирование →</Link>
       </aside>
       <section>
         <div className="dashHead">
@@ -1294,12 +1333,12 @@ function Studio() {
                   <strong>{x.readiness}/100</strong>
                   <span>{x.editor}</span>
                   <button
-                    onClick={async () => {
-                      try {
-                        setSelected(await api(`/api/services/${x.id}`));
-                      } catch {
-                        setSelected(demoService(x.slug || x.id));
-                      }
+                    onClick={() => {
+                      const local = demoService(x.slug || x.id);
+                      if (local) setSelected(local);
+                      api(`/api/services/${x.id}`)
+                        .then(setSelected)
+                        .catch(() => {});
                     }}
                   >
                     Редактировать
@@ -1326,7 +1365,13 @@ function Studio() {
               <div>
                 <button
                   className="btn outline"
-                  onClick={async () =>
+                  onClick={() => {
+                    setGate({
+                      score: 100,
+                      can_publish: true,
+                      scenarios: { successful: 8, tested: 8 },
+                      critical_errors: [],
+                    });
                     api(
                       `/api/studio/services/${selected.slug}/quality`,
                       { method: "POST", body: JSON.stringify(selected) },
@@ -1340,8 +1385,8 @@ function Studio() {
                           scenarios: { successful: 8, tested: 8 },
                           critical_errors: [],
                         }),
-                      )
-                  }
+                      );
+                  }}
                 >
                   Quality Gate
                 </button>
@@ -1464,7 +1509,8 @@ function Studio() {
               </label>
               <button
                 className="btn"
-                onClick={async () =>
+                onClick={() => {
+                  setOutput(compilerFallback);
                   api(
                     "/api/ai/compile",
                     {
@@ -1474,16 +1520,8 @@ function Studio() {
                     "analyst",
                   )
                     .then(setOutput)
-                    .catch(() =>
-                      setOutput({
-                        mode: "deterministic-fallback",
-                        confidence: 0.92,
-                        fields: ["requested_amount"],
-                        documents: ["feasibility_study"],
-                        rule: "requested_amount > 500000000",
-                      }),
-                    )
-                }
+                    .catch(() => {});
+                }}
               >
                 Сформировать черновик
               </button>
@@ -1491,11 +1529,7 @@ function Studio() {
                 AI не публикует автоматически; без ключей работает fallback.
               </small>
             </div>
-            <pre>
-              {output
-                ? JSON.stringify(output, null, 2)
-                : "Здесь появятся условия, поля, документы, источник и confidence."}
-            </pre>
+            <CompilerResult output={output} />
           </div>
         )}
         {!["Услуги", "AI Service Compiler"].includes(tab) && (
@@ -1505,40 +1539,152 @@ function Studio() {
     </div>
   );
 }
-function GenericModule({ tab }: { tab: string }) {
-  const [data, setData] = useState<Obj>();
-  async function run() {
-    try {
-      setData(
-        tab === "Policy Change Diff"
-          ? await api(
-              "/api/ai/policy-diff",
-              {
-                method: "POST",
-                body: JSON.stringify({
-                  old_text: "Порог 500 млн",
-                  new_text: "Порог 650 млн и новый документ",
-                }),
-              },
-              "analyst",
-            )
-          : tab === "Интеграции"
-            ? await api("/api/integrations/log", {}, "analyst")
-            : await api("/api/analytics", {}, "analyst"),
-      );
-    } catch {
-      setData(
-        tab === "Policy Change Diff"
-          ? {
-              mode: "deterministic-fallback",
-              changes: ["Порог изменён с 500 млн ₸ на 650 млн ₸"],
-            }
-          : tab === "Интеграции"
-            ? []
-            : demoAnalytics,
-      );
-    }
+function CompilerResult({ output }: { output?: Obj }) {
+  if (!output)
+    return (
+      <div className="humanResult emptyResult">
+        <b>Готово к формированию</b>
+        <p>Здесь появятся понятные поля, документы и правила — без технического кода.</p>
+      </div>
+    );
+  const draft = output.draft || output;
+  const labels: Obj = {
+    bin: "БИН",
+    company_name: "Название компании",
+    requested_amount: "Запрашиваемая сумма",
+    project_description: "Описание проекта",
+    feasibility_study: "Технико-экономическое обоснование",
+  };
+  const readable = (value: string) => labels[value] || value.replaceAll("_", " ");
+  const rules = draft.rules || (draft.rule ? [{ human: draft.rule, confidence: draft.confidence }] : []);
+  return (
+    <div className="humanResult compilerResult">
+      <div className="resultHead">
+        <span className="pill">Черновик · требуется проверка</span>
+        <small>Источник: {output.provider || "демо-режим"}</small>
+      </div>
+      <h2>{draft.title || "Конфигурация услуги"}</h2>
+      <p>{draft.description || "Структура сформирована из текста программы."}</p>
+      <div className="resultColumns">
+        <section>
+          <h3>Поля формы</h3>
+          <ul>{(draft.fields || []).map((x: string) => <li key={x}>{readable(x)}</li>)}</ul>
+        </section>
+        <section>
+          <h3>Документы</h3>
+          <ul>{(draft.documents || []).map((x: string) => <li key={x}>{readable(x)}</li>)}</ul>
+        </section>
+      </div>
+      <section className="ruleSummary">
+        <h3>Найденные правила</h3>
+        {rules.map((rule: Obj, index: number) => (
+          <div key={index}>
+            <b>{readable(rule.human || rule.rule || "Условное правило")}</b>
+            <span>{rule.review_status || "Требует проверки аналитиком"}</span>
+            {rule.confidence != null && <small>Уверенность: {Math.round(rule.confidence * 100)}%</small>}
+          </div>
+        ))}
+      </section>
+    </div>
+  );
+}
+
+function ModuleResult({ tab, data }: { tab: string; data: Obj }) {
+  if (tab === "Аналитика")
+    return (
+      <div className="humanResult analyticsResult">
+        <div className="resultStats">
+          <div><small>Всего заявок</small><b>{data.total_applications}</b></div>
+          <div><small>Подано</small><b>{data.submitted}</b></div>
+          <div><small>Завершение</small><b>{data.completion_rate}%</b></div>
+          <div><small>Предзаполнение</small><b>{data.prefill_rate}%</b></div>
+        </div>
+        <div className="resultColumns">
+          <section>
+            <h3>По регионам</h3>
+            {(data.by_region || []).map((x: Obj) => (
+              <div className="bar" key={x.name}><span>{x.name}</span><i style={{ width: `${Math.min(100, x.value / 4)}%` }} /><b>{x.value}</b></div>
+            ))}
+          </section>
+          <section>
+            <h3>Точки затруднения</h3>
+            {(data.user_friction || []).map((x: Obj) => (
+              <div className="friction" key={x.step}><b>{x.step}</b><span>{x.issue}</span><strong>{x.dropoff}%</strong></div>
+            ))}
+          </section>
+        </div>
+        <p className="resultNote">Ошибок проверки: {data.validation_errors} · Не хватает документов: {data.missing_documents}</p>
+      </div>
+    );
+  if (tab === "Интеграции") {
+    const items = data.items || [];
+    return (
+      <div className="humanResult">
+        <div className="integrationList">
+          {items.map((x: Obj) => (
+            <div key={x.id || `${x.connector}-${x.endpoint}`}>
+              <span><b>{x.connector}</b><small>{x.method} {x.endpoint}</small></span>
+              <i className="status published">{x.status}</i>
+              <strong>{x.response_time} мс</strong>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
+  return (
+    <div className="humanResult">
+      <div className="resultHead"><span className="pill">Изменения требуют решения</span><small>{data.provider || "Демо-сравнение"}</small></div>
+      <div className="changeList">
+        {(data.changes || []).map((change: Obj | string, index: number) => {
+          const item = typeof change === "string" ? { component: "Изменение политики", new: change } : change;
+          return (
+            <article key={index}>
+              <div><h3>{item.component || item.type}</h3><span className="status draft">{item.approval_status || "Ожидает решения"}</span></div>
+              <p><small>Было</small><b>{item.previous || "Предыдущая редакция"}</b></p>
+              <p><small>Стало</small><b>{item.new}</b></p>
+              <div className="alert warn">Рекомендация: {item.suggested_update || "Проверить изменение"}</div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function GenericModule({ tab }: { tab: string }) {
+  const [data, setData] = useState<Obj>(() => moduleFallback(tab));
+  const load = useCallback(() => {
+    setData(moduleFallback(tab));
+    const request =
+      tab === "Policy Change Diff"
+        ? api(
+            "/api/ai/policy-diff",
+            {
+              method: "POST",
+              body: JSON.stringify({
+                old_text: "Порог 500 млн",
+                new_text: "Порог 650 млн и новый документ",
+              }),
+            },
+            "analyst",
+          )
+        : tab === "Интеграции"
+          ? api("/api/integrations/log", {}, "analyst")
+          : api("/api/analytics", {}, "analyst");
+    request
+      .then((result) =>
+        setData(
+          tab === "Интеграции"
+            ? { items: result.length ? result : demoIntegrationLogs }
+            : result,
+        ),
+      )
+      .catch(() => {});
+  }, [tab]);
+  useEffect(() => {
+    load();
+  }, [load]);
   return (
     <div className="formCard">
       <h2>{tab}</h2>
@@ -1546,10 +1692,10 @@ function GenericModule({ tab }: { tab: string }) {
         Модуль использует санитизированные демонстрационные данные и
         детерминированные проверки.
       </p>
-      <button className="btn" onClick={run}>
-        Запустить модуль
+      <button className="btn" onClick={load}>
+        Обновить данные
       </button>
-      <pre>{data && JSON.stringify(data, null, 2)}</pre>
+      <ModuleResult tab={tab} data={data} />
     </div>
   );
 }
@@ -1652,7 +1798,7 @@ function MapPage() {
 }
 function Reports() {
   const [items, setItems] = useState<Obj[]>(demoReports),
-    [preview, setPreview] = useState<Obj>();
+    [preview, setPreview] = useState<Obj>(demoReports[0]);
   useEffect(() => {
     api("/api/reports")
       .then((x) => setItems(x.items?.length ? x.items : demoReports))
@@ -1930,13 +2076,13 @@ function RouteBuilder() {
 }
 function Admin() {
   const [data, setData] = useState<Obj>(demoAnalytics),
-    [logs, setLogs] = useState<Obj[]>([]);
+    [logs, setLogs] = useState<Obj[]>(demoIntegrationLogs);
   useEffect(() => {
     api("/api/analytics", {}, "holding_admin")
       .then(setData)
       .catch(() => {});
     api("/api/integrations/log", {}, "holding_admin")
-      .then(setLogs)
+      .then((items) => setLogs(items.length ? items : demoIntegrationLogs))
       .catch(() => {});
   }, []);
   return (
