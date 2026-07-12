@@ -77,3 +77,9 @@ VERCEL_PROJECT_ID
 ```
 
 Store `DATABASE_URL`, `FRONTEND_URL`, `DEMO_MODE` and `APP_ENV` in Railway itself. Store `NEXT_PUBLIC_API_URL` in Vercel itself as well as `RAILWAY_PUBLIC_URL` in GitHub. Run the **Deploy production** workflow manually; it deploys Railway first, then builds and deploys the frontend against the live backend.
+
+After deployment, validate the live stack:
+
+```powershell
+.\scripts\verify-production.ps1 -BackendUrl "https://<railway-domain>" -FrontendUrl "https://<vercel-domain>"
+```
