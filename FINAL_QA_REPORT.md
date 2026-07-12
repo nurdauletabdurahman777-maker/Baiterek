@@ -8,7 +8,7 @@ Date: 2026-07-12
 | Backend startup | PASS | Live `/health` = `ok`; `/ready` = `true` |
 | Frontend production build | PASS | Next 15 optimized build compiled; route and middleware generated; HTTP 200 startup smoke |
 | Frontend typecheck | PASS | `tsc --noEmit` exit 0 |
-| Frontend lint | PARTIAL | Next compilation/type validation clean; local ESLint install blocked by extremely slow filesystem and ephemeral parser resolution |
+| Frontend lint | PASS | Vercel production build ran Next.js ESLint and type validation successfully |
 | Demo login / role protection | PASS | Three role routes set demo role; middleware and API dependencies protect Studio/admin |
 | Shared runtime for both services | PASS | Both definitions in `data.py`; automated `test_both_services_share_runtime_and_quality_passes` |
 | Conditional documents | PASS | Automated boundary test and live smoke: 500M false, 500M+1 true |
@@ -44,5 +44,4 @@ threshold: 500000001 => feasibility_study required
 
 ## Verdict
 
-**PASS for the stable competition MVP critical flow.** The only partial items are local lint-tool installation and browser automation availability; neither revealed an application defect. Before a real production launch, replace demo authentication/mocks and add RLS/object-storage security controls described in README.
-
+**PASS for the deployed competition MVP critical flow.** Browser automation was unavailable in the Codex surface, so production HTTP, CORS, rule-boundary and API write-flow tests were used instead. Before a real regulated launch, replace demo authentication/mocks and add object-storage security controls described in README.
