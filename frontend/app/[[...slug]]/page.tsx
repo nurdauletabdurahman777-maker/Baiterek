@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any -- service definitions are runtime-configured JSON */
 import Link from "next/link";import {usePathname,useRouter} from "next/navigation";import {useCallback,useEffect,useMemo,useState} from "react";
 const API=process.env.NEXT_PUBLIC_API_URL||"http://localhost:8000";
 type Role="entrepreneur"|"analyst"|"subsidiary_admin"|"holding_admin";type Obj=Record<string,any>;
