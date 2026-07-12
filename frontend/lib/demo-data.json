@@ -1,0 +1,1507 @@
+{
+  "services": [
+    {
+      "id": "wagon-leasing",
+      "slug": "wagon-leasing",
+      "title": "Приобретение вагонов в лизинг",
+      "short_description": "Лизинговое финансирование приобретения грузовых вагонов для развития перевозок.",
+      "category": "Лизинг",
+      "organization": "АО «Фонд развития промышленности»",
+      "support_type": "Лизинговое финансирование",
+      "audience": [
+        "Юридические лица",
+        "ИП"
+      ],
+      "status": "published",
+      "version": "1.0",
+      "processing_time": "Предварительная подача — 20 минут",
+      "policy_source": "Демонстрационные условия программы лизинга",
+      "relevance_date": "2026-07-01",
+      "steps": [
+        {
+          "id": "s1",
+          "title": "Заявитель и компания"
+        },
+        {
+          "id": "s2",
+          "title": "Информация о проекте"
+        },
+        {
+          "id": "s3",
+          "title": "Параметры вагонов"
+        },
+        {
+          "id": "s4",
+          "title": "Финансирование"
+        },
+        {
+          "id": "s5",
+          "title": "Документы"
+        },
+        {
+          "id": "s6",
+          "title": "Проверка и первичная подача"
+        },
+        {
+          "id": "s7",
+          "title": "Расширенные сведения"
+        },
+        {
+          "id": "s8",
+          "title": "Дополнительные документы"
+        }
+      ],
+      "fields": [
+        {
+          "id": "applicant_type",
+          "step_id": "s1",
+          "type": "radio",
+          "label": "Тип заявителя",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [
+            {
+              "value": "legal",
+              "label": "Юридическое лицо"
+            },
+            {
+              "value": "ip",
+              "label": "ИП"
+            }
+          ],
+          "description": ""
+        },
+        {
+          "id": "bin",
+          "step_id": "s1",
+          "type": "bin",
+          "label": "БИН / ИИН",
+          "required": true,
+          "hidden": false,
+          "prefill": "bin",
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "company_name",
+          "step_id": "s1",
+          "type": "text",
+          "label": "Наименование компании",
+          "required": true,
+          "hidden": false,
+          "prefill": "company_name",
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "registration_date",
+          "step_id": "s1",
+          "type": "date",
+          "label": "Дата регистрации",
+          "required": true,
+          "hidden": false,
+          "prefill": "registration_date",
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "region",
+          "step_id": "s1",
+          "type": "select",
+          "label": "Регион",
+          "required": true,
+          "hidden": false,
+          "prefill": "region",
+          "options": [
+            {
+              "value": "astana",
+              "label": "Астана"
+            },
+            {
+              "value": "almaty",
+              "label": "Алматы"
+            },
+            {
+              "value": "kostanay",
+              "label": "Костанайская область"
+            },
+            {
+              "value": "turkestan",
+              "label": "Туркестанская область"
+            }
+          ],
+          "description": ""
+        },
+        {
+          "id": "company_age_months",
+          "step_id": "s1",
+          "type": "number",
+          "label": "Возраст компании, месяцев",
+          "required": false,
+          "hidden": true,
+          "prefill": "company_age_months",
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "purpose",
+          "step_id": "s2",
+          "type": "textarea",
+          "label": "Цель проекта",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "economic_effect",
+          "step_id": "s2",
+          "type": "textarea",
+          "label": "Ожидаемый экономический эффект",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "jobs",
+          "step_id": "s2",
+          "type": "number",
+          "label": "Новые рабочие места",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "wagon_type",
+          "step_id": "s3",
+          "type": "select",
+          "label": "Тип вагона",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [
+            {
+              "value": "gondola",
+              "label": "Полувагон"
+            },
+            {
+              "value": "tank",
+              "label": "Цистерна"
+            },
+            {
+              "value": "platform",
+              "label": "Платформа"
+            }
+          ],
+          "description": ""
+        },
+        {
+          "id": "wagon_quantity",
+          "step_id": "s3",
+          "type": "number",
+          "label": "Количество вагонов",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "unit_cost",
+          "step_id": "s3",
+          "type": "money",
+          "label": "Стоимость одного вагона, ₸",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "supplier",
+          "step_id": "s3",
+          "type": "text",
+          "label": "Поставщик",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "supplier_country",
+          "step_id": "s3",
+          "type": "select",
+          "label": "Страна поставщика",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [
+            {
+              "value": "kz",
+              "label": "Казахстан"
+            },
+            {
+              "value": "foreign",
+              "label": "Другая страна"
+            }
+          ],
+          "description": ""
+        },
+        {
+          "id": "delivery_period",
+          "step_id": "s3",
+          "type": "text",
+          "label": "Срок поставки",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "requested_amount",
+          "step_id": "s4",
+          "type": "money",
+          "label": "Запрашиваемая сумма, ₸",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "contribution_percentage",
+          "step_id": "s4",
+          "type": "percentage",
+          "label": "Собственное участие, %",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "total_wagon_cost",
+          "step_id": "s4",
+          "type": "calculated",
+          "label": "Общая стоимость вагонов",
+          "required": false,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "contribution_amount",
+          "step_id": "s4",
+          "type": "calculated",
+          "label": "Сумма собственного участия",
+          "required": false,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "financing_gap",
+          "step_id": "s4",
+          "type": "calculated",
+          "label": "Дефицит финансирования",
+          "required": false,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "young_company_details",
+          "step_id": "s7",
+          "type": "textarea",
+          "label": "Дополнительные сведения о новой компании",
+          "required": false,
+          "hidden": true,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "extended_impact",
+          "step_id": "s7",
+          "type": "textarea",
+          "label": "Расширенное влияние проекта",
+          "required": false,
+          "hidden": true,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        }
+      ],
+      "documents": [
+        {
+          "id": "registration_doc",
+          "title": "Регистрационные документы",
+          "required": true
+        },
+        {
+          "id": "feasibility_study",
+          "title": "Технико-экономическое обоснование"
+        },
+        {
+          "id": "import_agreement",
+          "title": "Внешнеторговый договор"
+        }
+      ],
+      "rules": [
+        {
+          "id": "amount-500m",
+          "name": "Сумма свыше 500 млн ₸",
+          "conditions": [
+            {
+              "field": "requested_amount",
+              "operator": "gt",
+              "value": 500000000
+            }
+          ],
+          "actions": [
+            {
+              "type": "require_document",
+              "target": "feasibility_study"
+            },
+            {
+              "type": "warning",
+              "target": "requested_amount",
+              "message": "Демо-правило: требуется технико-экономическое обоснование"
+            }
+          ]
+        },
+        {
+          "id": "foreign-supplier",
+          "name": "Иностранный поставщик",
+          "conditions": [
+            {
+              "field": "supplier_country",
+              "operator": "eq",
+              "value": "foreign"
+            }
+          ],
+          "actions": [
+            {
+              "type": "require_document",
+              "target": "import_agreement"
+            }
+          ]
+        },
+        {
+          "id": "low-contribution",
+          "name": "Собственное участие ниже 15%",
+          "conditions": [
+            {
+              "field": "contribution_percentage",
+              "operator": "lt",
+              "value": 15
+            }
+          ],
+          "actions": [
+            {
+              "type": "warning",
+              "target": "contribution_percentage",
+              "message": "Демо-правило: проверьте достаточность собственного участия"
+            }
+          ]
+        },
+        {
+          "id": "young-company",
+          "name": "Компания младше 12 месяцев",
+          "conditions": [
+            {
+              "field": "company_age_months",
+              "operator": "lt",
+              "value": 12
+            }
+          ],
+          "actions": [
+            {
+              "type": "show",
+              "target": "young_company_details"
+            },
+            {
+              "type": "require",
+              "target": "young_company_details"
+            },
+            {
+              "type": "warning",
+              "target": "registration_date",
+              "message": "Демо-правило: для новой компании нужны дополнительные сведения"
+            }
+          ]
+        },
+        {
+          "id": "large-fleet",
+          "name": "Более 100 вагонов",
+          "conditions": [
+            {
+              "field": "wagon_quantity",
+              "operator": "gt",
+              "value": 100
+            }
+          ],
+          "actions": [
+            {
+              "type": "show",
+              "target": "extended_impact"
+            },
+            {
+              "type": "require",
+              "target": "extended_impact"
+            }
+          ]
+        }
+      ],
+      "calculations": [
+        {
+          "id": "total",
+          "label": "Общая стоимость",
+          "target": "total_wagon_cost",
+          "operation": "multiply",
+          "inputs": [
+            "wagon_quantity",
+            "unit_cost"
+          ]
+        },
+        {
+          "id": "contribution",
+          "label": "Собственное участие",
+          "target": "contribution_amount",
+          "operation": "percent",
+          "inputs": [
+            "total_wagon_cost",
+            "contribution_percentage"
+          ]
+        },
+        {
+          "id": "gap",
+          "label": "Дефицит",
+          "target": "financing_gap",
+          "operation": "subtract",
+          "inputs": [
+            "total_wagon_cost",
+            "contribution_amount"
+          ]
+        }
+      ],
+      "integrations": [
+        "egov-bin-mock",
+        "eds-mock",
+        "bpm-mock"
+      ]
+    },
+    {
+      "id": "livestock",
+      "slug": "livestock",
+      "title": "Агробизнес: животноводство",
+      "short_description": "Финансирование создания и расширения животноводческого хозяйства.",
+      "category": "Агробизнес",
+      "organization": "АО «Аграрная кредитная корпорация»",
+      "support_type": "Льготное финансирование",
+      "audience": [
+        "КФХ",
+        "ИП",
+        "Юридические лица"
+      ],
+      "status": "published",
+      "version": "1.0",
+      "processing_time": "Предварительная подача — 18 минут",
+      "policy_source": "Демонстрационные условия агропрограммы",
+      "relevance_date": "2026-07-01",
+      "steps": [
+        {
+          "id": "s1",
+          "title": "Заявитель и хозяйство"
+        },
+        {
+          "id": "s2",
+          "title": "Текущий бизнес"
+        },
+        {
+          "id": "s3",
+          "title": "Животноводческий проект"
+        },
+        {
+          "id": "s4",
+          "title": "Земля и инфраструктура"
+        },
+        {
+          "id": "s5",
+          "title": "Финансирование"
+        },
+        {
+          "id": "s6",
+          "title": "Документы"
+        },
+        {
+          "id": "s7",
+          "title": "Проверка и отправка"
+        },
+        {
+          "id": "s8",
+          "title": "Расширенные сведения"
+        }
+      ],
+      "fields": [
+        {
+          "id": "applicant_type",
+          "step_id": "s1",
+          "type": "radio",
+          "label": "Тип заявителя",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [
+            {
+              "value": "legal",
+              "label": "Юридическое лицо"
+            },
+            {
+              "value": "ip",
+              "label": "ИП"
+            }
+          ],
+          "description": ""
+        },
+        {
+          "id": "bin",
+          "step_id": "s1",
+          "type": "bin",
+          "label": "БИН / ИИН",
+          "required": true,
+          "hidden": false,
+          "prefill": "bin",
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "company_name",
+          "step_id": "s1",
+          "type": "text",
+          "label": "Наименование компании",
+          "required": true,
+          "hidden": false,
+          "prefill": "company_name",
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "registration_date",
+          "step_id": "s1",
+          "type": "date",
+          "label": "Дата регистрации",
+          "required": true,
+          "hidden": false,
+          "prefill": "registration_date",
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "region",
+          "step_id": "s1",
+          "type": "select",
+          "label": "Регион",
+          "required": true,
+          "hidden": false,
+          "prefill": "region",
+          "options": [
+            {
+              "value": "astana",
+              "label": "Астана"
+            },
+            {
+              "value": "almaty",
+              "label": "Алматы"
+            },
+            {
+              "value": "kostanay",
+              "label": "Костанайская область"
+            },
+            {
+              "value": "turkestan",
+              "label": "Туркестанская область"
+            }
+          ],
+          "description": ""
+        },
+        {
+          "id": "livestock_direction",
+          "step_id": "s2",
+          "type": "select",
+          "label": "Направление животноводства",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [
+            {
+              "value": "cattle",
+              "label": "КРС"
+            },
+            {
+              "value": "sheep",
+              "label": "Овцеводство"
+            },
+            {
+              "value": "horse",
+              "label": "Коневодство"
+            }
+          ],
+          "description": ""
+        },
+        {
+          "id": "current_herd",
+          "step_id": "s2",
+          "type": "number",
+          "label": "Текущее поголовье",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "new_business",
+          "step_id": "s2",
+          "type": "radio",
+          "label": "Стадия бизнеса",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [
+            {
+              "value": "new",
+              "label": "Новый бизнес"
+            },
+            {
+              "value": "existing",
+              "label": "Действующее хозяйство"
+            }
+          ],
+          "description": ""
+        },
+        {
+          "id": "planned_herd",
+          "step_id": "s3",
+          "type": "number",
+          "label": "Плановое поголовье",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "project_description",
+          "step_id": "s3",
+          "type": "textarea",
+          "label": "Описание проекта",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "jobs",
+          "step_id": "s3",
+          "type": "number",
+          "label": "Новые рабочие места",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "has_land",
+          "step_id": "s4",
+          "type": "radio",
+          "label": "Есть земельный участок",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [
+            {
+              "value": "yes",
+              "label": "Да"
+            },
+            {
+              "value": "no",
+              "label": "Нет"
+            }
+          ],
+          "description": ""
+        },
+        {
+          "id": "infrastructure",
+          "step_id": "s4",
+          "type": "multiselect",
+          "label": "Инфраструктура",
+          "required": false,
+          "hidden": false,
+          "prefill": null,
+          "options": [
+            {
+              "value": "water",
+              "label": "Водоснабжение"
+            },
+            {
+              "value": "power",
+              "label": "Электроснабжение"
+            },
+            {
+              "value": "barn",
+              "label": "Помещения"
+            }
+          ],
+          "description": ""
+        },
+        {
+          "id": "infrastructure_plan",
+          "step_id": "s4",
+          "type": "textarea",
+          "label": "План создания инфраструктуры",
+          "required": false,
+          "hidden": true,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "requested_amount",
+          "step_id": "s5",
+          "type": "money",
+          "label": "Запрашиваемая сумма, ₸",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "contribution_percentage",
+          "step_id": "s5",
+          "type": "percentage",
+          "label": "Собственное участие, %",
+          "required": true,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "herd_growth",
+          "step_id": "s5",
+          "type": "calculated",
+          "label": "Рост поголовья",
+          "required": false,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "contribution_amount",
+          "step_id": "s5",
+          "type": "calculated",
+          "label": "Собственное участие",
+          "required": false,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        },
+        {
+          "id": "financing_gap",
+          "step_id": "s5",
+          "type": "calculated",
+          "label": "Дефицит финансирования",
+          "required": false,
+          "hidden": false,
+          "prefill": null,
+          "options": [],
+          "description": ""
+        }
+      ],
+      "documents": [
+        {
+          "id": "registration_doc",
+          "title": "Регистрационные документы",
+          "required": true
+        },
+        {
+          "id": "business_plan",
+          "title": "Бизнес-план"
+        },
+        {
+          "id": "vet_plan",
+          "title": "Операционный и ветеринарный план"
+        }
+      ],
+      "rules": [
+        {
+          "id": "no-land",
+          "name": "Нет земли",
+          "conditions": [
+            {
+              "field": "has_land",
+              "operator": "eq",
+              "value": "no"
+            }
+          ],
+          "actions": [
+            {
+              "type": "warning",
+              "target": "has_land",
+              "message": "Демо-проверка: подтвердите план получения земли"
+            }
+          ]
+        },
+        {
+          "id": "new-business",
+          "name": "Новый бизнес",
+          "conditions": [
+            {
+              "field": "new_business",
+              "operator": "eq",
+              "value": "new"
+            }
+          ],
+          "actions": [
+            {
+              "type": "require_document",
+              "target": "business_plan"
+            }
+          ]
+        },
+        {
+          "id": "large-herd",
+          "name": "Поголовье свыше 500",
+          "conditions": [
+            {
+              "field": "planned_herd",
+              "operator": "gt",
+              "value": 500
+            }
+          ],
+          "actions": [
+            {
+              "type": "require_document",
+              "target": "vet_plan"
+            }
+          ]
+        },
+        {
+          "id": "missing-infra",
+          "name": "Нет инфраструктуры",
+          "conditions": [
+            {
+              "field": "infrastructure",
+              "operator": "empty"
+            }
+          ],
+          "actions": [
+            {
+              "type": "show",
+              "target": "infrastructure_plan"
+            },
+            {
+              "type": "require",
+              "target": "infrastructure_plan"
+            }
+          ]
+        },
+        {
+          "id": "low-contribution",
+          "name": "Вклад ниже 10%",
+          "conditions": [
+            {
+              "field": "contribution_percentage",
+              "operator": "lt",
+              "value": 10
+            }
+          ],
+          "actions": [
+            {
+              "type": "warning",
+              "target": "contribution_percentage",
+              "message": "Демо-правило: низкое собственное участие"
+            }
+          ]
+        }
+      ],
+      "calculations": [
+        {
+          "id": "growth",
+          "label": "Рост поголовья",
+          "target": "herd_growth",
+          "operation": "subtract",
+          "inputs": [
+            "planned_herd",
+            "current_herd"
+          ]
+        },
+        {
+          "id": "contribution",
+          "label": "Собственное участие",
+          "target": "contribution_amount",
+          "operation": "percent",
+          "inputs": [
+            "requested_amount",
+            "contribution_percentage"
+          ]
+        },
+        {
+          "id": "gap",
+          "label": "Дефицит",
+          "target": "financing_gap",
+          "operation": "subtract",
+          "inputs": [
+            "requested_amount",
+            "contribution_amount"
+          ]
+        }
+      ],
+      "integrations": [
+        "egov-bin-mock",
+        "eds-mock",
+        "bpm-mock"
+      ]
+    }
+  ],
+  "reports": [
+    {
+      "id": 1,
+      "title": "Годовой отчёт Холдинга",
+      "organization": "АО «НУХ «Байтерек»",
+      "type": "Годовой отчёт",
+      "period": "2025",
+      "date": "2026-03-15",
+      "description": "Ключевые показатели, выводы и динамика программ поддержки.",
+      "source": "Демонстрационный каталог Baiterek FlowOS"
+    },
+    {
+      "id": 2,
+      "title": "Обзор программ МСБ",
+      "organization": "АО «ФРП «Даму»",
+      "type": "Исследование",
+      "period": "2025",
+      "date": "2026-03-15",
+      "description": "Ключевые показатели, выводы и динамика программ поддержки.",
+      "source": "Демонстрационный каталог Baiterek FlowOS"
+    },
+    {
+      "id": 3,
+      "title": "Лизинг промышленного оборудования",
+      "organization": "АО «ФРП»",
+      "type": "Аналитика",
+      "period": "2025",
+      "date": "2026-03-15",
+      "description": "Ключевые показатели, выводы и динамика программ поддержки.",
+      "source": "Демонстрационный каталог Baiterek FlowOS"
+    },
+    {
+      "id": 4,
+      "title": "Агрофинансирование регионов",
+      "organization": "АО «АКК»",
+      "type": "Обзор",
+      "period": "2025",
+      "date": "2026-03-15",
+      "description": "Ключевые показатели, выводы и динамика программ поддержки.",
+      "source": "Демонстрационный каталог Baiterek FlowOS"
+    },
+    {
+      "id": 5,
+      "title": "Экспортная активность",
+      "organization": "Export Credit Agency",
+      "type": "Аналитика",
+      "period": "2025",
+      "date": "2026-03-15",
+      "description": "Ключевые показатели, выводы и динамика программ поддержки.",
+      "source": "Демонстрационный каталог Baiterek FlowOS"
+    },
+    {
+      "id": 6,
+      "title": "Жилищные инициативы",
+      "organization": "Отбасы банк",
+      "type": "Отчёт",
+      "period": "2025",
+      "date": "2026-03-15",
+      "description": "Ключевые показатели, выводы и динамика программ поддержки.",
+      "source": "Демонстрационный каталог Baiterek FlowOS"
+    },
+    {
+      "id": 7,
+      "title": "ESG и устойчивое развитие",
+      "organization": "АО «НУХ «Байтерек»",
+      "type": "Исследование",
+      "period": "2025",
+      "date": "2026-03-15",
+      "description": "Ключевые показатели, выводы и динамика программ поддержки.",
+      "source": "Демонстрационный каталог Baiterek FlowOS"
+    },
+    {
+      "id": 8,
+      "title": "Портфель поддержки 2025",
+      "organization": "АО «НУХ «Байтерек»",
+      "type": "Финансовый отчёт",
+      "period": "2025",
+      "date": "2026-03-15",
+      "description": "Ключевые показатели, выводы и динамика программ поддержки.",
+      "source": "Демонстрационный каталог Baiterek FlowOS"
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "name": "Проект развития №1",
+      "organization": "Даму",
+      "region": "Астана",
+      "settlement": "Астана",
+      "lat": 43.2,
+      "lng": 51.1,
+      "sector": "Промышленность",
+      "financing": 120000000,
+      "year": 2024,
+      "period": "2024–2026",
+      "status": "Реализуется",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 2,
+      "name": "Проект развития №2",
+      "organization": "ФРП",
+      "region": "Алматы",
+      "settlement": "Алматы",
+      "lat": 44.6,
+      "lng": 54.300000000000004,
+      "sector": "АПК",
+      "financing": 157000000,
+      "year": 2025,
+      "period": "2024–2026",
+      "status": "Завершён",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 3,
+      "name": "Проект развития №3",
+      "organization": "АКК",
+      "region": "Шымкент",
+      "settlement": "Шымкент",
+      "lat": 46.0,
+      "lng": 57.5,
+      "sector": "Логистика",
+      "financing": 194000000,
+      "year": 2026,
+      "period": "2024–2026",
+      "status": "Одобрен",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 4,
+      "name": "Проект развития №4",
+      "organization": "Даму",
+      "region": "Акмолинская",
+      "settlement": "Акмолинская",
+      "lat": 47.400000000000006,
+      "lng": 60.7,
+      "sector": "Услуги",
+      "financing": 231000000,
+      "year": 2024,
+      "period": "2024–2026",
+      "status": "Реализуется",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 5,
+      "name": "Проект развития №5",
+      "organization": "ФРП",
+      "region": "Актюбинская",
+      "settlement": "Актюбинская",
+      "lat": 48.800000000000004,
+      "lng": 63.900000000000006,
+      "sector": "Промышленность",
+      "financing": 268000000,
+      "year": 2025,
+      "period": "2024–2026",
+      "status": "Завершён",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 6,
+      "name": "Проект развития №6",
+      "organization": "АКК",
+      "region": "Алматинская",
+      "settlement": "Алматинская",
+      "lat": 50.2,
+      "lng": 67.1,
+      "sector": "АПК",
+      "financing": 305000000,
+      "year": 2026,
+      "period": "2024–2026",
+      "status": "Одобрен",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 7,
+      "name": "Проект развития №7",
+      "organization": "Даму",
+      "region": "Атырауская",
+      "settlement": "Атырауская",
+      "lat": 43.2,
+      "lng": 70.30000000000001,
+      "sector": "Логистика",
+      "financing": 342000000,
+      "year": 2024,
+      "period": "2024–2026",
+      "status": "Реализуется",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 8,
+      "name": "Проект развития №8",
+      "organization": "ФРП",
+      "region": "ВКО",
+      "settlement": "ВКО",
+      "lat": 44.6,
+      "lng": 73.5,
+      "sector": "Услуги",
+      "financing": 379000000,
+      "year": 2025,
+      "period": "2024–2026",
+      "status": "Завершён",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 9,
+      "name": "Проект развития №9",
+      "organization": "АКК",
+      "region": "Жамбылская",
+      "settlement": "Жамбылская",
+      "lat": 46.0,
+      "lng": 51.1,
+      "sector": "Промышленность",
+      "financing": 416000000,
+      "year": 2026,
+      "period": "2024–2026",
+      "status": "Одобрен",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 10,
+      "name": "Проект развития №10",
+      "organization": "Даму",
+      "region": "Жетысуская",
+      "settlement": "Жетысуская",
+      "lat": 47.400000000000006,
+      "lng": 54.300000000000004,
+      "sector": "АПК",
+      "financing": 453000000,
+      "year": 2024,
+      "period": "2024–2026",
+      "status": "Реализуется",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 11,
+      "name": "Проект развития №11",
+      "organization": "ФРП",
+      "region": "ЗКО",
+      "settlement": "ЗКО",
+      "lat": 48.800000000000004,
+      "lng": 57.5,
+      "sector": "Логистика",
+      "financing": 490000000,
+      "year": 2025,
+      "period": "2024–2026",
+      "status": "Завершён",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 12,
+      "name": "Проект развития №12",
+      "organization": "АКК",
+      "region": "Карагандинская",
+      "settlement": "Карагандинская",
+      "lat": 50.2,
+      "lng": 60.7,
+      "sector": "Услуги",
+      "financing": 527000000,
+      "year": 2026,
+      "period": "2024–2026",
+      "status": "Одобрен",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 13,
+      "name": "Проект развития №13",
+      "organization": "Даму",
+      "region": "Костанайская",
+      "settlement": "Костанайская",
+      "lat": 43.2,
+      "lng": 63.900000000000006,
+      "sector": "Промышленность",
+      "financing": 564000000,
+      "year": 2024,
+      "period": "2024–2026",
+      "status": "Реализуется",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 14,
+      "name": "Проект развития №14",
+      "organization": "ФРП",
+      "region": "Кызылординская",
+      "settlement": "Кызылординская",
+      "lat": 44.6,
+      "lng": 67.1,
+      "sector": "АПК",
+      "financing": 601000000,
+      "year": 2025,
+      "period": "2024–2026",
+      "status": "Завершён",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 15,
+      "name": "Проект развития №15",
+      "organization": "АКК",
+      "region": "Мангистауская",
+      "settlement": "Мангистауская",
+      "lat": 46.0,
+      "lng": 70.30000000000001,
+      "sector": "Логистика",
+      "financing": 638000000,
+      "year": 2026,
+      "period": "2024–2026",
+      "status": "Одобрен",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 16,
+      "name": "Проект развития №16",
+      "organization": "Даму",
+      "region": "Павлодарская",
+      "settlement": "Павлодарская",
+      "lat": 47.400000000000006,
+      "lng": 73.5,
+      "sector": "Услуги",
+      "financing": 675000000,
+      "year": 2024,
+      "period": "2024–2026",
+      "status": "Реализуется",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 17,
+      "name": "Проект развития №17",
+      "organization": "ФРП",
+      "region": "СКО",
+      "settlement": "СКО",
+      "lat": 48.800000000000004,
+      "lng": 51.1,
+      "sector": "Промышленность",
+      "financing": 712000000,
+      "year": 2025,
+      "period": "2024–2026",
+      "status": "Завершён",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 18,
+      "name": "Проект развития №18",
+      "organization": "АКК",
+      "region": "Туркестанская",
+      "settlement": "Туркестанская",
+      "lat": 50.2,
+      "lng": 54.300000000000004,
+      "sector": "АПК",
+      "financing": 749000000,
+      "year": 2026,
+      "period": "2024–2026",
+      "status": "Одобрен",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 19,
+      "name": "Проект развития №19",
+      "organization": "Даму",
+      "region": "Улытауская",
+      "settlement": "Улытауская",
+      "lat": 43.2,
+      "lng": 57.5,
+      "sector": "Логистика",
+      "financing": 786000000,
+      "year": 2024,
+      "period": "2024–2026",
+      "status": "Реализуется",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 20,
+      "name": "Проект развития №20",
+      "organization": "ФРП",
+      "region": "Абайская",
+      "settlement": "Абайская",
+      "lat": 44.6,
+      "lng": 60.7,
+      "sector": "Услуги",
+      "financing": 823000000,
+      "year": 2025,
+      "period": "2024–2026",
+      "status": "Завершён",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 21,
+      "name": "Проект развития №21",
+      "organization": "АКК",
+      "region": "Астана",
+      "settlement": "Астана",
+      "lat": 46.0,
+      "lng": 63.900000000000006,
+      "sector": "Промышленность",
+      "financing": 860000000,
+      "year": 2026,
+      "period": "2024–2026",
+      "status": "Одобрен",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 22,
+      "name": "Проект развития №22",
+      "organization": "Даму",
+      "region": "Алматы",
+      "settlement": "Алматы",
+      "lat": 47.400000000000006,
+      "lng": 67.1,
+      "sector": "АПК",
+      "financing": 897000000,
+      "year": 2024,
+      "period": "2024–2026",
+      "status": "Реализуется",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 23,
+      "name": "Проект развития №23",
+      "organization": "ФРП",
+      "region": "Шымкент",
+      "settlement": "Шымкент",
+      "lat": 48.800000000000004,
+      "lng": 70.30000000000001,
+      "sector": "Логистика",
+      "financing": 934000000,
+      "year": 2025,
+      "period": "2024–2026",
+      "status": "Завершён",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 24,
+      "name": "Проект развития №24",
+      "organization": "АКК",
+      "region": "Акмолинская",
+      "settlement": "Акмолинская",
+      "lat": 50.2,
+      "lng": 73.5,
+      "sector": "Услуги",
+      "financing": 971000000,
+      "year": 2026,
+      "period": "2024–2026",
+      "status": "Одобрен",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    },
+    {
+      "id": 25,
+      "name": "Проект развития №25",
+      "organization": "Даму",
+      "region": "Актюбинская",
+      "settlement": "Актюбинская",
+      "lat": 43.2,
+      "lng": 51.1,
+      "sector": "Промышленность",
+      "financing": 1008000000,
+      "year": 2024,
+      "period": "2024–2026",
+      "status": "Реализуется",
+      "description": "Демонстрационный проект с подтверждённым социально-экономическим эффектом."
+    }
+  ],
+  "passport": {
+    "bin": "120640012345",
+    "company_name": "ТОО «Qazaq Logistics»",
+    "legal_form": "ТОО",
+    "registration_date": "2018-06-14",
+    "company_age_months": 97,
+    "director": "Серикова Айдана Ерлановна",
+    "address": "г. Астана, пр. Мәңгілік Ел, 55/18",
+    "region": "astana",
+    "sector": "Логистика",
+    "activity_code": "49.20",
+    "email": "office@qazaq-logistics.demo",
+    "phone": "+7 7172 55 44 33",
+    "employees": 42,
+    "annual_revenue": 780000000,
+    "documents": [
+      "registration_doc"
+    ]
+  },
+  "applications": [
+    {
+      "id": 9001,
+      "number": "BF-DEMO-000001",
+      "service": "Приобретение вагонов в лизинг",
+      "organization": "АО «Фонд развития промышленности»",
+      "status": "submitted",
+      "next_action": "Ожидайте первичную проверку"
+    }
+  ],
+  "analytics": {
+    "demo": true,
+    "total_applications": 1284,
+    "submitted": 914,
+    "completion_rate": 71.2,
+    "prefill_rate": 46.3,
+    "validation_errors": 186,
+    "missing_documents": 73,
+    "by_region": [
+      {
+        "name": "Астана",
+        "value": 342
+      },
+      {
+        "name": "Алматы",
+        "value": 297
+      },
+      {
+        "name": "Туркестанская область",
+        "value": 181
+      }
+    ],
+    "user_friction": [
+      {
+        "step": "Документы",
+        "issue": "Неясный формат подтверждения",
+        "dropoff": 18.4
+      },
+      {
+        "step": "Финансирование",
+        "issue": "Ошибки в суммах",
+        "dropoff": 11.2
+      }
+    ]
+  }
+}
