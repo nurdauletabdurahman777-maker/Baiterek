@@ -82,3 +82,5 @@ Deploy the portal from `frontend/` as `baiterek-flowos` with `NEXT_PUBLIC_API_UR
 eGov/BIN, digital signature, BPM, CRM and integration bus are clearly labeled deterministic mocks. AI Compiler and Policy Diff use a deterministic fallback without keys; external providers may be wired later. Uploaded files are validated as metadata in the MVP and should use object storage plus malware scanning in production. Seeded projects and analytics are labeled demo data.
 
 See [architecture](docs/ARCHITECTURE.md), [demo script](docs/DEMO_SCRIPT.md), and [final QA](FINAL_QA_REPORT.md).
+
+Production Supabase/Railway/Vercel wiring is documented in [docs/PRODUCTION_DEPLOYMENT.md](docs/PRODUCTION_DEPLOYMENT.md).
