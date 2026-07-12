@@ -84,3 +84,5 @@ eGov/BIN, digital signature, BPM, CRM and integration bus are clearly labeled de
 See [architecture](docs/ARCHITECTURE.md), [demo script](docs/DEMO_SCRIPT.md), and [final QA](FINAL_QA_REPORT.md).
 
 Production Supabase/Railway/Vercel wiring is documented in [docs/PRODUCTION_DEPLOYMENT.md](docs/PRODUCTION_DEPLOYMENT.md).
+
+The current live URLs and verification evidence are recorded in [docs/DEPLOYMENT_STATUS.md](docs/DEPLOYMENT_STATUS.md).
