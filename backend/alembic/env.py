@@ -1,5 +1,11 @@
 from alembic import context
 from sqlalchemy import engine_from_config, pool
+from pathlib import Path
+import sys
+
+# Alembic's console entry point may not include the application root on sys.path.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from app.models import Base, URL
 config=context.config
 config.set_main_option("sqlalchemy.url", URL.replace("%", "%%"))
