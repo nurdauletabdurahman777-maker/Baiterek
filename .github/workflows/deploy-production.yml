@@ -1,0 +1,50 @@
+name: Deploy production
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: production
+  cancel-in-progress: false
+
+jobs:
+  railway-backend:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install --global @railway/cli
+      - name: Deploy backend to Railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: railway up backend --ci --service "${{ secrets.RAILWAY_SERVICE_ID }}" --path-as-root
+
+  vercel-frontend:
+    needs: railway-backend
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install --global vercel@latest
+      - name: Link Vercel project
+        shell: bash
+        run: |
+          mkdir -p .vercel
+          printf '{"orgId":"%s","projectId":"%s"}' "${{ secrets.VERCEL_ORG_ID }}" "${{ secrets.VERCEL_PROJECT_ID }}" > .vercel/project.json
+      - name: Pull production settings
+        run: vercel pull --yes --environment=production --token="${{ secrets.VERCEL_TOKEN }}"
+      - name: Build frontend
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.RAILWAY_PUBLIC_URL }}
+        run: vercel build --prod --token="${{ secrets.VERCEL_TOKEN }}"
+      - name: Deploy frontend
+        run: vercel deploy --prebuilt --prod --archive=tgz --token="${{ secrets.VERCEL_TOKEN }}"

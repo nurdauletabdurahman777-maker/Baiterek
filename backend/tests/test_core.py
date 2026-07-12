@@ -3,6 +3,7 @@ from fastapi.testclient import TestClient
 from app.data import SERVICES
 from app.engine import evaluate, quality_gate, readiness
 from app.main import app
+from app.models import normalize_database_url
 
 def complete_answers(service):
     values={}
@@ -20,6 +21,11 @@ def test_amount_threshold_requires_feasibility_study():
     result=evaluate(s,{"requested_amount":500_000_001})
     assert "feasibility_study" in result["required_documents"]
     assert "технико-экономическое" in result["warnings"][0]["message"]
+
+def test_provider_database_urls_select_psycopg():
+    assert normalize_database_url("postgres://u:p@host/db") == "postgresql+psycopg://u:p@host/db"
+    assert normalize_database_url("postgresql://u:p@host/db") == "postgresql+psycopg://u:p@host/db"
+    assert normalize_database_url("sqlite:///demo.db") == "sqlite:///demo.db"
 
 def test_calculations_are_deterministic():
     result=evaluate(SERVICES["wagon-leasing"],{"wagon_quantity":10,"unit_cost":25_000_000,"contribution_percentage":20})
@@ -55,4 +61,3 @@ def test_submission_persists_and_is_idempotent():
         first=c.post(f"/api/applications/{draft['id']}/submit",headers={**token,"Idempotency-Key":"demo-1"}); assert first.status_code==200
         second=c.post(f"/api/applications/{draft['id']}/submit",headers={**token,"Idempotency-Key":"demo-1"}).json(); assert second["duplicate"]
         assert any(x["id"]==draft["id"] for x in c.get("/api/applications",headers=token).json())
-

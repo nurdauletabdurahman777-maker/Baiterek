@@ -1,6 +1,7 @@
 from datetime import datetime
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, JSON, String, Text, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
+from sqlalchemy.pool import NullPool
 import os
 
 class Base(DeclarativeBase): pass
@@ -25,6 +26,23 @@ class AuditLog(Base):
 class GenericEntity(Base):
     __tablename__="platform_entities"; id:Mapped[int]=mapped_column(primary_key=True); entity_type:Mapped[str]=mapped_column(String(80),index=True); owner:Mapped[str|None]=mapped_column(String(200),nullable=True); data:Mapped[dict]=mapped_column(JSON); created_at:Mapped[datetime]=mapped_column(DateTime,default=datetime.utcnow)
 
-URL=os.getenv("DATABASE_URL","sqlite:///./baiterek.db"); engine=create_engine(URL,connect_args={"check_same_thread":False} if URL.startswith("sqlite") else {},pool_pre_ping=True); SessionLocal=sessionmaker(bind=engine,expire_on_commit=False)
-def init_db(): Base.metadata.create_all(engine)
+def normalize_database_url(value: str) -> str:
+    """Select psycopg explicitly for provider-supplied PostgreSQL URLs."""
+    if value.startswith("postgres://"):
+        return "postgresql+psycopg://" + value.removeprefix("postgres://")
+    if value.startswith("postgresql://"):
+        return "postgresql+psycopg://" + value.removeprefix("postgresql://")
+    return value
 
+
+URL=normalize_database_url(os.getenv("DATABASE_URL","sqlite:///./baiterek.db"))
+engine_options = {"pool_pre_ping": True}
+if URL.startswith("sqlite"):
+    engine_options["connect_args"] = {"check_same_thread": False}
+elif "pooler.supabase.com" in URL and ":6543" in URL:
+    # Supavisor transaction mode must not retain connections or prepared statements.
+    engine_options["poolclass"] = NullPool
+    engine_options["connect_args"] = {"prepare_threshold": None}
+engine=create_engine(URL,**engine_options)
+SessionLocal=sessionmaker(bind=engine,expire_on_commit=False)
+def init_db(): Base.metadata.create_all(engine)

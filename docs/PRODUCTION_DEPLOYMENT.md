@@ -63,3 +63,17 @@ Deploy and then update Railway `FRONTEND_URL` to the final Vercel production dom
 6. Restart the Railway service and confirm the application still exists in Supabase.
 7. Check Railway logs and the FlowOS integration log for sanitized payloads only.
 
+## GitHub Actions automation
+
+`FlowOS CI` validates every push and pull request. After the Supabase, Railway and Vercel projects are created, add these GitHub environment secrets under `production`:
+
+```text
+RAILWAY_TOKEN
+RAILWAY_SERVICE_ID
+RAILWAY_PUBLIC_URL
+VERCEL_TOKEN
+VERCEL_ORG_ID
+VERCEL_PROJECT_ID
+```
+
+Store `DATABASE_URL`, `FRONTEND_URL`, `DEMO_MODE` and `APP_ENV` in Railway itself. Store `NEXT_PUBLIC_API_URL` in Vercel itself as well as `RAILWAY_PUBLIC_URL` in GitHub. Run the **Deploy production** workflow manually; it deploys Railway first, then builds and deploys the frontend against the live backend.
