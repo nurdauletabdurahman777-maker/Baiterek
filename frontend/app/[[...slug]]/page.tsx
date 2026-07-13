@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- service definitions are runtime-configured JSON */
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   demoAnalytics,
   demoApplications,
@@ -357,6 +357,7 @@ function ServiceGlyph({ slug }: { slug: string }) {
 }
 function Catalog() {
   const [items, setItems] = useState<Obj[]>(demoServices),
+    [searchDraft, setSearchDraft] = useState(""),
     [search, setSearch] = useState(""),
     [category, setCategory] = useState(""),
     [error, setError] = useState("");
@@ -397,11 +398,14 @@ function Catalog() {
           <div className="catalogSearch">
             <span aria-hidden="true">⌕</span>
             <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={searchDraft}
+              onChange={(e) => setSearchDraft(e.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") setSearch(searchDraft);
+              }}
               placeholder="Поиск по названию услуги, направлению или описанию"
             />
-            <button className="btn">Найти</button>
+            <button className="btn" onClick={() => setSearch(searchDraft)}>Найти</button>
           </div>
           <div className="catalogFilterGrid">
             <label>
@@ -417,9 +421,8 @@ function Catalog() {
             </label>
             <label>
               <span>Регион</span>
-              <select>
+              <select disabled title="Демо-услуги доступны во всех регионах">
                 <option>Все регионы</option>
-                <option>Астана</option>
               </select>
             </label>
             <div className="catalogFilterNote">
@@ -1228,6 +1231,7 @@ function Studio() {
     [gate, setGate] = useState<Obj>(),
     [threshold, setThreshold] = useState(500000000),
     [message, setMessage] = useState(""),
+    [studioSearch, setStudioSearch] = useState(""),
     [tab, setTab] = useState("Услуги"),
     [policy, setPolicy] = useState(
       "Программа финансирует предпринимателей. При сумме свыше 500 млн тенге требуется технико-экономическое обоснование.",
@@ -1243,6 +1247,16 @@ function Studio() {
   useEffect(() => {
     load();
   }, [load]);
+  const visibleItems = useMemo(() => {
+    const value = studioSearch.trim().toLocaleLowerCase("ru");
+    return value
+      ? items.filter((item) =>
+          `${item.title} ${item.organization}`
+            .toLocaleLowerCase("ru")
+            .includes(value),
+        )
+      : items;
+  }, [items, studioSearch]);
   async function publish() {
     if (!selected) return;
     const definition = structuredClone(selected),
@@ -1304,7 +1318,12 @@ function Studio() {
         {tab === "Услуги" && !selected && (
           <>
             <div className="tools">
-              <input placeholder="Поиск услуг" />
+              <input
+                aria-label="Поиск услуг Studio"
+                placeholder="Поиск услуг"
+                value={studioSearch}
+                onChange={(event) => setStudioSearch(event.target.value)}
+              />
               <button
                 className="btn"
                 onClick={() => setMessage("Черновик новой услуги создан")}
@@ -1320,7 +1339,7 @@ function Studio() {
                 <b>Редактор</b>
                 <b>Действия</b>
               </div>
-              {items.map((x) => (
+              {visibleItems.map((x) => (
                 <div key={x.id}>
                   <span>
                     <b>{x.title}</b>
@@ -1345,6 +1364,7 @@ function Studio() {
                   </button>
                 </div>
               ))}
+              {!visibleItems.length && <p>Услуги по запросу не найдены.</p>}
             </div>
           </>
         )}
@@ -1398,7 +1418,10 @@ function Studio() {
             <div className="editor">
               <nav>
                 {selected.steps.map((x: Obj, i: number) => (
-                  <button key={x.id}>
+                  <button
+                    key={x.id}
+                    onClick={() => setMessage(`Открыт этап «${x.title}» для настройки.`)}
+                  >
                     {i + 1}. {x.title}
                     <small>
                       {
@@ -1437,7 +1460,9 @@ function Studio() {
                       {f.type}
                       {f.prefill ? " · предзаполнение" : ""}
                     </small>
-                    <button>Настроить</button>
+                    <button onClick={() => setMessage(`Поле «${f.label}» выбрано для настройки.`)}>
+                      Настроить
+                    </button>
                   </div>
                 ))}
               </div>
@@ -1709,16 +1734,39 @@ function MapPage() {
     },
   });
   const [data, setData] = useState<Obj>(mapData(demoProjects)),
-    [sector, setSector] = useState("");
+    [sector, setSector] = useState(""),
+    [region, setRegion] = useState(""),
+    [status, setStatus] = useState(""),
+    [selectedProject, setSelectedProject] = useState<string | number>();
+  const regions = useMemo(
+      () => [...new Set(demoProjects.map((item) => item.region))],
+      [],
+    ),
+    statuses = useMemo(
+      () => [...new Set(demoProjects.map((item) => item.status))],
+      [],
+    );
   useEffect(() => {
-    const filtered = sector
-      ? demoProjects.filter((item) => item.sector === sector)
-      : demoProjects;
+    const filtered = demoProjects.filter(
+      (item) =>
+        (!sector || item.sector === sector) &&
+        (!region || item.region === region) &&
+        (!status || item.status === status),
+    );
     setData(mapData(filtered));
-    api(`/api/projects?sector=${encodeURIComponent(sector)}`)
+    const params = new URLSearchParams({ sector, region, status });
+    api(`/api/projects?${params.toString()}`)
       .then(setData)
       .catch(() => {});
-  }, [sector]);
+  }, [region, sector, status]);
+  function openProject(project: Obj) {
+    setSelectedProject(project.id);
+    requestAnimationFrame(() =>
+      document
+        .getElementById(`project-${project.id}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "nearest" }),
+    );
+  }
   return (
     <section className="wrap section">
       <Heading
@@ -1734,11 +1782,13 @@ function MapPage() {
           <option>Логистика</option>
           <option>Услуги</option>
         </select>
-        <select>
-          <option>Все регионы</option>
+        <select aria-label="Регион проекта" value={region} onChange={(event) => setRegion(event.target.value)}>
+          <option value="">Все регионы</option>
+          {regions.map((item) => <option key={item}>{item}</option>)}
         </select>
-        <select>
-          <option>Все статусы</option>
+        <select aria-label="Статус проекта" value={status} onChange={(event) => setStatus(event.target.value)}>
+          <option value="">Все статусы</option>
+          {statuses.map((item) => <option key={item}>{item}</option>)}
         </select>
       </div>
       {!data ? (
@@ -1764,8 +1814,10 @@ function MapPage() {
               КАЗАХСТАН
               {data.items.map((x: Obj, i: number) => (
                 <button
+                  className={selectedProject === x.id ? "active" : ""}
                   title={x.name}
                   key={x.id}
+                  onClick={() => openProject(x)}
                   style={{
                     left: `${5 + ((i * 13) % 88)}%`,
                     top: `${12 + ((i * 27) % 72)}%`,
@@ -1777,7 +1829,7 @@ function MapPage() {
             </div>
             <div>
               {data.items.slice(0, 8).map((x: Obj) => (
-                <article key={x.id}>
+                <article className={selectedProject === x.id ? "selected" : ""} id={`project-${x.id}`} key={x.id}>
                   <span className="pill">{x.status}</span>
                   <h3>{x.name}</h3>
                   <p>
@@ -1798,46 +1850,131 @@ function MapPage() {
 }
 function Reports() {
   const [items, setItems] = useState<Obj[]>(demoReports),
-    [preview, setPreview] = useState<Obj>(demoReports[0]);
+    [preview, setPreview] = useState<Obj>(demoReports[0]),
+    [analytics, setAnalytics] = useState<Obj>(demoAnalytics),
+    [query, setQuery] = useState(""),
+    [type, setType] = useState(""),
+    [organization, setOrganization] = useState(""),
+    [apiConnected, setApiConnected] = useState(false);
+  const previewRef = useRef<HTMLElement>(null),
+    listRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    api("/api/reports")
-      .then((x) => setItems(x.items?.length ? x.items : demoReports))
+    const reportsRequest = api("/api/reports")
+      .then((x) => {
+        setItems(x.items?.length ? x.items : demoReports);
+        setApiConnected(true);
+      })
       .catch(() => {});
+    const analyticsRequest = api("/api/analytics", {}, "holding_admin")
+      .then((x) => {
+        setAnalytics(x);
+        setApiConnected(true);
+      })
+      .catch(() => {});
+    void Promise.allSettled([reportsRequest, analyticsRequest]);
   }, []);
+  const types = useMemo(
+      () => [...new Set(items.map((item) => item.type))],
+      [items],
+    ),
+    organizations = useMemo(
+      () => [...new Set(items.map((item) => item.organization))],
+      [items],
+    ),
+    filtered = useMemo(() => {
+      const normalized = query.trim().toLocaleLowerCase("ru");
+      return items.filter(
+        (item) =>
+          (!normalized ||
+            `${item.title} ${item.description} ${item.organization}`
+              .toLocaleLowerCase("ru")
+              .includes(normalized)) &&
+          (!type || item.type === type) &&
+          (!organization || item.organization === organization),
+      );
+    }, [items, organization, query, type]);
+  const activePreview =
+    filtered.find((item) => item.id === preview?.id) || filtered[0];
+  function resetFilters() {
+    setQuery("");
+    setType("");
+    setOrganization("");
+  }
+  function openPreview(item: Obj) {
+    setPreview(item);
+    requestAnimationFrame(() => {
+      if (window.matchMedia("(max-width: 1000px)").matches)
+        previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
   return (
-    <section className="wrap section">
-      <Heading tag="Знания и аналитика" title="Аналитические материалы" />
-      <div className="filters">
-        <input placeholder="Поиск материалов" />
-        <select>
-          <option>Все типы</option>
+    <section className="wrap section reportsPage">
+      <div className="reportsHeading">
+        <Heading tag="Знания и аналитика" title="Аналитические материалы" />
+        <span className={apiConnected ? "apiStatus online" : "apiStatus"}>
+          <i /> {apiConnected ? "Railway API подключён" : "Демо-данные доступны"}
+        </span>
+      </div>
+      <div className="reportsKpis" aria-label="Ключевые показатели">
+        <div><small>Всего заявок</small><b>{analytics.total_applications}</b></div>
+        <div><small>Подано</small><b>{analytics.submitted}</b></div>
+        <div><small>Завершение</small><b>{analytics.completion_rate}%</b></div>
+        <div><small>Предзаполнение</small><b>{analytics.prefill_rate}%</b></div>
+      </div>
+      <div className="filters reportFilters">
+        <input
+          aria-label="Поиск материалов"
+          placeholder="Поиск материалов"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+        />
+        <select aria-label="Тип материала" value={type} onChange={(event) => setType(event.target.value)}>
+          <option value="">Все типы</option>
+          {types.map((item) => <option key={item}>{item}</option>)}
         </select>
-        <select>
-          <option>Все организации</option>
+        <select aria-label="Организация" value={organization} onChange={(event) => setOrganization(event.target.value)}>
+          <option value="">Все организации</option>
+          {organizations.map((item) => <option key={item}>{item}</option>)}
         </select>
+        <button className="btn outline" onClick={resetFilters} disabled={!query && !type && !organization}>Сбросить</button>
+      </div>
+      <div className="reportResultBar" aria-live="polite">
+        <b>Найдено материалов: {filtered.length}</b>
+        <span>Данные обновляются из backend без блокировки интерфейса</span>
       </div>
       <div className="reports">
-        <div className="cards3">
-          {items.map((x) => (
-            <article className="card" key={x.id}>
+        <div className="cards3 reportCards" ref={listRef}>
+          {filtered.map((x) => (
+            <article className={`card ${activePreview?.id === x.id ? "selected" : ""}`} key={x.id}>
               <span>{x.type}</span>
               <h3>{x.title}</h3>
               <p>{x.description}</p>
               <small>
                 {x.organization} · {x.period}
               </small>
-              <button className="btn outline" onClick={() => setPreview(x)}>
-                Открыть / просмотреть
+              <button
+                className="btn outline"
+                aria-pressed={activePreview?.id === x.id}
+                onClick={() => openPreview(x)}
+              >
+                {activePreview?.id === x.id ? "Открыто ✓" : "Открыть / просмотреть"}
               </button>
             </article>
           ))}
+          {!filtered.length && (
+            <div className="emptyReports">
+              <h3>Материалы не найдены</h3>
+              <p>Измените запрос или сбросьте фильтры.</p>
+              <button className="btn outline" onClick={resetFilters}>Сбросить фильтры</button>
+            </div>
+          )}
         </div>
-        <aside className="preview">
+        <aside className="preview" ref={previewRef} aria-live="polite" tabIndex={-1}>
           <em>ПРЕДПРОСМОТР</em>
-          {preview ? (
+          {activePreview ? (
             <>
-              <h2>{preview.title}</h2>
-              <p>{preview.description}</p>
+              <h2>{activePreview.title}</h2>
+              <p>{activePreview.description}</p>
               <div className="paper">
                 FLOWOS
                 <i />
@@ -1845,7 +1982,13 @@ function Reports() {
                 <i />
                 <b>Демо-просмотр</b>
               </div>
-              <small>Источник: {preview.source}</small>
+              <small>Источник: {activePreview.source}</small>
+              <button
+                className="btn outline backToReports"
+                onClick={() => listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
+              >
+                ← К списку материалов
+              </button>
             </>
           ) : (
             <State text="Выберите материал" />
@@ -1859,6 +2002,7 @@ function Tools() {
   const [amount, setAmount] = useState(300000000),
     [rate, setRate] = useState(12.5),
     [years, setYears] = useState(5),
+    [diagnostics, setDiagnostics] = useState<boolean[]>(() => Array(5).fill(false)),
     [score, setScore] = useState<number>();
   const monthly =
     (amount * (rate / 1200) * Math.pow(1 + rate / 1200, years * 12)) /
@@ -1911,17 +2055,24 @@ function Tools() {
             "Есть проектная команда",
           ].map((x, i) => (
             <label className="consent" key={x}>
-              <input id={`diag${i}`} type="checkbox" />
+              <input
+                id={`diag${i}`}
+                type="checkbox"
+                checked={diagnostics[i]}
+                onChange={(event) =>
+                  setDiagnostics((current) =>
+                    current.map((value, index) =>
+                      index === i ? event.target.checked : value,
+                    ),
+                  )
+                }
+              />
               {x}
             </label>
           ))}
           <button
             className="btn"
-            onClick={() =>
-              setScore(
-                document.querySelectorAll(".consent input:checked").length * 20,
-              )
-            }
+            onClick={() => setScore(diagnostics.filter(Boolean).length * 20)}
           >
             Рассчитать
           </button>

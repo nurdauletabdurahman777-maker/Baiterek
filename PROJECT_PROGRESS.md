@@ -16,6 +16,7 @@
 | 10. Premium visual system и responsive QA | Завершена | Inter Variable, institutional UI tokens, 50 viewport/page checks, interaction smoke и production build PASS |
 | 11. Reference-fidelity correction | Завершена | Row-based catalogue, Baiterek header/footer, 2-column form inspector, dense Studio; 15 responsive checks PASS |
 | 12. Operational UX and latency repair | Завершена | Жюри/admin login, instant Analytics/Studio fallback, human-readable Compiler/Diff/Integrations; desktop/mobile smoke PASS |
+| 13. Analytics interaction repair | Завершена | Railway API verified; live KPI, real search/filters/reset, explicit selected state and mobile preview navigation PASS |
 
 ## Решения
 
@@ -73,3 +74,14 @@
 - Responsive smoke на `390 px`: `/reports`, `/studio`, `/admin` — `scrollWidth = clientWidth = 390`, горизонтального переполнения нет.
 - Критические сценарии: редактирование услуги `698 ms`, Quality Gate `336 ms`; при `500 000 000 ₸` ТЭО optional, при `500 000 001 ₸` — missing/required.
 - Финальные проверки: `tsc --noEmit` PASS, ESLint PASS, Next.js production build PASS, backend `pytest` 8/8 PASS, `/health` = `ok`.
+
+## Phase 13 — восстановление интерактивности аналитики
+
+- Production Railway проверен напрямую: `/health = ok`, `/api/reports` возвращает 8 материалов, `/api/analytics` возвращает KPI, CORS разрешает `https://baiterek-flowos.vercel.app`.
+- Раздел `/reports` теперь одновременно загружает отчёты и KPI из backend; seed fallback остаётся мгновенным и не блокирует интерфейс.
+- Поиск, фильтр типа, фильтр организации и кнопка сброса работают реально и показывают количество найденных материалов.
+- Выбранная карточка получила явное состояние `Открыто ✓`; фильтрация сразу синхронизирует предпросмотр с первым найденным материалом.
+- На мобильном «Открыть / просмотреть» плавно переводит пользователя к изменившемуся предпросмотру, а кнопка «К списку материалов» возвращает к карточкам.
+- Mobile interaction smoke (`390 px`): 8 → 1 материал по запросу «экспорт», 2 материала по типу «Аналитика», preview = «Экспортная активность», horizontal overflow = 0.
+- Расширенный click-audit устранил декоративные контролы: фильтры региона/статуса и точки карты теперь работают, поиск Studio фильтрует услуги, этапы и поля дают явную обратную связь.
+- Исправлен расчёт диагностики готовности: он считает только свои 5 чекбоксов и больше не захватывает выбранные параметры «Маршрута поддержки».
